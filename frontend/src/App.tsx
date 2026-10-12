@@ -160,30 +160,16 @@ export default function App() {
     }
   }
 
-  if (checkingSession) {
-    return (
-      <>
+  return (
+    <>
+      {checkingSession ? (
         <main className="session-loading">
           <span className="brand-mark" aria-hidden="true">d</span>
           <p>Getting your space ready...</p>
         </main>
-        <SpeedInsights />
-      </>
-    );
-  }
-
-  if (route === "/dashboard" && user) {
-    return (
-      <>
+      ) : route === "/dashboard" && user ? (
         <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} theme={theme} onToggleTheme={toggleTheme} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />
-        <SpeedInsights />
-      </>
-    );
-  }
-
-  if (route === "/login" || route === "/register") {
-    return (
-      <>
+      ) : route === "/login" || route === "/register" ? (
         <AccountForm
           mode={route === "/login" ? "signin" : "signup"}
           notice={notice}
@@ -193,14 +179,9 @@ export default function App() {
           onModeChange={openAccount}
           onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
         />
-        <SpeedInsights />
-      </>
-    );
-  }
-
-  return (
-    <>
-      <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />
+      ) : (
+        <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />
+      )}
       <SpeedInsights />
     </>
   );
