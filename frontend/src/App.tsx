@@ -160,47 +160,40 @@ export default function App() {
     }
   }
 
+  let content;
+
   if (checkingSession) {
-    return (
-      <>
-        <main className="session-loading">
-          <span className="brand-mark" aria-hidden="true">d</span>
-          <p>Getting your space ready...</p>
-        </main>
-        <SpeedInsights />
-      </>
+    content = (
+      <main className="session-loading">
+        <span className="brand-mark" aria-hidden="true">d</span>
+        <p>Getting your space ready...</p>
+      </main>
     );
-  }
-
-  if (route === "/dashboard" && user) {
-    return (
-      <>
-        <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} theme={theme} onToggleTheme={toggleTheme} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />
-        <SpeedInsights />
-      </>
+  } else if (route === "/dashboard" && user) {
+    content = (
+      <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} theme={theme} onToggleTheme={toggleTheme} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />
     );
-  }
-
-  if (route === "/login" || route === "/register") {
-    return (
-      <>
-        <AccountForm
-          mode={route === "/login" ? "signin" : "signup"}
-          notice={notice}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onBack={() => navigate("/")}
-          onModeChange={openAccount}
-          onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
-        />
-        <SpeedInsights />
-      </>
+  } else if (route === "/login" || route === "/register") {
+    content = (
+      <AccountForm
+        mode={route === "/login" ? "signin" : "signup"}
+        notice={notice}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onBack={() => navigate("/")}
+        onModeChange={openAccount}
+        onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
+      />
+    );
+  } else {
+    content = (
+      <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />
     );
   }
 
   return (
     <>
-      <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />
+      {content}
       <SpeedInsights />
     </>
   );
