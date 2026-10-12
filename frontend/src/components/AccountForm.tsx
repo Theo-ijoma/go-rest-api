@@ -1,17 +1,16 @@
 import { FormEvent, useState } from "react";
-import { AccountMode } from "../App";
+import type { AccountMode } from "../App";
 import { apiRequest, APIError, readTodos, readUser, Todo, User } from "../api";
 
 type Props = {
-  initialMode: AccountMode;
+  mode: AccountMode;
   notice: string;
   onBack: () => void;
   onModeChange: (mode: AccountMode) => void;
   onAuthenticated: (user: User, todos: Todo[], loadError?: string) => void;
 };
 
-export default function AccountForm({ initialMode, notice, onBack, onModeChange, onAuthenticated }: Props) {
-  const [mode, setMode] = useState<AccountMode>(initialMode);
+export default function AccountForm({ mode, notice, onBack, onModeChange, onAuthenticated }: Props) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +19,6 @@ export default function AccountForm({ initialMode, notice, onBack, onModeChange,
   const signingUp = mode === "signup";
 
   function changeMode(nextMode: AccountMode) {
-    setMode(nextMode);
     onModeChange(nextMode);
     setError("");
   }

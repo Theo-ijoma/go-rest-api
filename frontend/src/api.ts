@@ -21,7 +21,7 @@ export class APIError extends Error {
   }
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/+$/, "");
+const API_BASE_URL = "/api";
 const REQUEST_TIMEOUT_MS = 10_000;
 
 function isUser(value: unknown): value is User {
@@ -53,7 +53,7 @@ function isTodo(value: unknown): value is Todo {
 export async function readUser(response: Response): Promise<User> {
   const value: unknown = await response.json();
   if (!isUser(value)) {
-    throw new APIError("The backend returned an unexpected response. Restart it from the backend folder.", 0);
+    throw new APIError("The server returned an unexpected account response.", 0);
   }
   return value;
 }
@@ -61,7 +61,7 @@ export async function readUser(response: Response): Promise<User> {
 export async function readTodos(response: Response): Promise<Todo[]> {
   const value: unknown = await response.json();
   if (!Array.isArray(value) || !value.every(isTodo)) {
-    throw new APIError("The backend returned an unexpected todo list. Restart it from the backend folder.", 0);
+    throw new APIError("The server returned an unexpected task list.", 0);
   }
   return value;
 }
@@ -82,11 +82,11 @@ export async function apiRequest(path: string, init: RequestInit = {}): Promise<
       headers,
       signal: controller.signal,
     });
-  } catch (error) {
+  } catch {
     if (controller.signal.aborted) {
-      throw new APIError("The server took too long to respond. Check that the backend is running, then try again.", 0);
+      throw new APIError("The server took too long to respond. Try again in a moment.", 0);
     }
-    throw new APIError("Could not connect to the server. Check that the backend is running, then try again.", 0);
+    throw new APIError("Could not connect to the server. Check your connection and try again.", 0);
   } finally {
     window.clearTimeout(timeout);
   }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AccountMode } from "../App";
+import type { AccountMode } from "../App";
 import Reveal from "./Reveal";
 
 type Props = {

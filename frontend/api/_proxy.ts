@@ -4,7 +4,7 @@ type RuntimeEnvironment = typeof globalThis & {
 
 const METHODS = new Set(["GET", "POST", "PUT", "DELETE", "OPTIONS"]);
 
-function jsonError(status: number, message: string): Response {
+export function jsonError(status: number, message: string): Response {
   return new Response(JSON.stringify({ error: message }), {
     status,
     headers: { "content-type": "application/json", "cache-control": "no-store" },
@@ -34,7 +34,7 @@ function backendOrigin(): string | null {
   }
 }
 
-export function proxy(apiPath: string, allowedMethods: string[]) {
+export function proxy(apiPath: string, allowedMethods: readonly string[]) {
   return {
     async fetch(request: Request): Promise<Response> {
       const origin = backendOrigin();

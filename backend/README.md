@@ -2,6 +2,8 @@
 
 A personal task list with a Go API, MongoDB storage, and a React landing page. Every account has its own private todo list.
 
+See the repository's [CODEBASE.md](../CODEBASE.md) for the frontend and backend architecture, request flows, data model, API contract, and deployment routing.
+
 ## Start the app
 
 1. Copy `backend/.env.example` to `backend/.env` and set `MONGODB_URI` to your MongoDB Atlas connection string. Never commit or share your real `.env`.
@@ -56,7 +58,7 @@ This repository has Vercel configuration for two separate projects. The frontend
    | --- | --- |
    | `BACKEND_URL` | Backend origin only, such as `https://daymark-api.vercel.app` |
 
-   Do not set `VITE_API_BASE_URL` to the backend deployment. The browser must call the frontend's `/api` proxy so its session cookie remains first-party.
+   The browser always calls the frontend's `/api` proxy so its session cookie remains first-party.
 
 4. Deploy the frontend, then copy its exact production origin into the backend's `FRONTEND_ORIGIN` variable and redeploy the backend if it changed.
 5. Open the frontend deployment and test account registration, sign-in, todo changes, refresh, and sign-out.
@@ -82,16 +84,6 @@ If `/api/auth/login` returns `405 Method Not Allowed` with `index.html` in the r
 | `GET` | `/todos/{id}` | Get one of the signed-in user's todos |
 | `PUT` | `/todos/{id}` | Update one of the signed-in user's todos |
 | `DELETE` | `/todos/{id}` | Delete one of the signed-in user's todos |
-
-## Express concepts in Go
-
-| Express | Go |
-| --- | --- |
-| `app.get("/todos", handler)` | `mux.HandleFunc("GET /todos", handler)` |
-| `req` | `*http.Request` |
-| `res` | `http.ResponseWriter` |
-| Route parameter `req.params.id` | `r.PathValue("id")` |
-| `res.json(value)` | Set the JSON content type, then encode with `json.NewEncoder(w)` |
 
 The tests use in-memory repositories and account services, so they run without a live MongoDB cluster.
 

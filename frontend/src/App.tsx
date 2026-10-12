@@ -4,17 +4,47 @@ import AccountForm from "./components/AccountForm";
 import Dashboard from "./components/Dashboard";
 import LandingPage from "./components/LandingPage";
 
-type Screen = "landing" | "account" | "dashboard";
+type Route = "/" | "/login" | "/register" | "/dashboard";
 export type AccountMode = "signin" | "signup";
 
+function currentRoute(): Route {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (path === "/login" || path === "/register" || path === "/dashboard") {
+    return path;
+  }
+  return "/";
+}
+
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("landing");
-  const [accountMode, setAccountMode] = useState<AccountMode>("signup");
+  const [route, setRoute] = useState<Route>(currentRoute);
   const [user, setUser] = useState<User | null>(null);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [todosError, setTodosError] = useState("");
   const [checkingSession, setCheckingSession] = useState(true);
   const [notice, setNotice] = useState("");
+
+  function navigate(nextRoute: Route, replace = false) {
+    if (window.location.pathname !== nextRoute) {
+      if (replace) {
+        window.history.replaceState(null, "", nextRoute);
+      } else {
+        window.history.pushState(null, "", nextRoute);
+      }
+    }
+    setRoute(nextRoute);
+  }
+
+  useEffect(() => {
+    function handlePopState() {
+      setRoute(currentRoute());
+    }
+    window.addEventListener("popstate", handlePopState);
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    if (path !== route) {
+      window.history.replaceState(null, "", route);
+    }
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -26,7 +56,7 @@ export default function App() {
         sessionRestored = true;
         if (active) {
           setUser(currentUser);
-          setScreen("dashboard");
+          navigate("/dashboard", true);
         }
 
         const todoResponse = await apiRequest("/todos");
@@ -39,12 +69,14 @@ export default function App() {
         if (active) {
           if (sessionRestored && error instanceof APIError && error.status === 401) {
             setUser(null);
-            setScreen("landing");
+            navigate("/login", true);
             setNotice("Your session expired. Sign in again to see your tasks.");
           } else if (sessionRestored) {
             setTodosError(error instanceof Error ? error.message : "Unable to load your tasks.");
           } else if (!(error instanceof APIError && error.status === 401)) {
             setNotice(error instanceof Error ? error.message : "Unable to connect to Daymark.");
+          } else if (route === "/dashboard") {
+            navigate("/", true);
           }
         }
       } finally {
@@ -60,9 +92,8 @@ export default function App() {
   }, []);
 
   function openAccount(mode: AccountMode) {
-    setAccountMode(mode);
     setNotice("");
-    setScreen("account");
+    navigate(mode === "signin" ? "/login" : "/register");
   }
 
   function onAuthenticated(authenticatedUser: User, userTodos: Todo[], loadError = "") {
@@ -70,7 +101,7 @@ export default function App() {
     setTodos(userTodos);
     setTodosError(loadError);
     setNotice("");
-    setScreen("dashboard");
+    navigate("/dashboard");
   }
 
   async function reloadTodos() {
@@ -81,7 +112,7 @@ export default function App() {
     } catch (error) {
       if (error instanceof APIError && error.status === 401) {
         setUser(null);
-        setScreen("landing");
+        navigate("/login", true);
         setNotice("Your session expired. Sign in again to see your tasks.");
         return;
       }
@@ -95,7 +126,7 @@ export default function App() {
       setUser(null);
       setTodos([]);
       setNotice("You are signed out. Your next step can wait until you are ready.");
-      setScreen("landing");
+      navigate("/");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Unable to sign out. Please try again.");
     }
@@ -110,17 +141,17 @@ export default function App() {
     );
   }
 
-  if (screen === "dashboard" && user) {
+  if (route === "/dashboard" && user) {
     return <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />;
   }
 
-  if (screen === "account") {
+  if (route === "/login" || route === "/register") {
     return (
       <AccountForm
-        initialMode={accountMode}
+        mode={route === "/login" ? "signin" : "signup"}
         notice={notice}
-        onBack={() => setScreen("landing")}
-        onModeChange={setAccountMode}
+        onBack={() => navigate("/")}
+        onModeChange={openAccount}
         onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
       />
     );
