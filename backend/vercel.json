@@ -1,37 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/api?path=/"
-    },
-    {
-      "source": "/healthz",
-      "destination": "/api?path=/healthz"
-    },
-    {
-      "source": "/auth/register",
-      "destination": "/api?path=/auth/register"
-    },
-    {
-      "source": "/auth/login",
-      "destination": "/api?path=/auth/login"
-    },
-    {
-      "source": "/auth/logout",
-      "destination": "/api?path=/auth/logout"
-    },
-    {
-      "source": "/auth/me",
-      "destination": "/api?path=/auth/me"
-    },
-    {
-      "source": "/todos",
-      "destination": "/api?path=/todos"
-    },
-    {
-      "source": "/todos/:id",
-      "destination": "/api?path=/todos/:id"
-    }
-  ]
+  "framework": "go"
 }
