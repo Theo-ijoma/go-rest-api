@@ -6,6 +6,19 @@ import LandingPage from "./components/LandingPage";
 
 type Route = "/" | "/login" | "/register" | "/dashboard";
 export type AccountMode = "signin" | "signup";
+export type Theme = "light" | "dark";
+
+function initialTheme(): Theme {
+  try {
+    const stored = window.localStorage.getItem("daymark-theme");
+    if (stored === "light" || stored === "dark") {
+      return stored;
+    }
+  } catch {
+    // Use the operating-system preference when browser storage is unavailable.
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
 
 function currentRoute(): Route {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -22,6 +35,7 @@ export default function App() {
   const [todosError, setTodosError] = useState("");
   const [checkingSession, setCheckingSession] = useState(true);
   const [notice, setNotice] = useState("");
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   function navigate(nextRoute: Route, replace = false) {
     if (window.location.pathname !== nextRoute) {
@@ -45,6 +59,19 @@ export default function App() {
     }
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      window.localStorage.setItem("daymark-theme", theme);
+    } catch {
+      // Theme remains active for this visit if browser storage is unavailable.
+    }
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((current) => current === "dark" ? "light" : "dark");
+  }
 
   useEffect(() => {
     let active = true;
@@ -125,7 +152,7 @@ export default function App() {
       await apiRequest("/auth/logout", { method: "POST" });
       setUser(null);
       setTodos([]);
-      setNotice("You are signed out. Your next step can wait until you are ready.");
+      setNotice("");
       navigate("/");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Unable to sign out. Please try again.");
@@ -142,7 +169,7 @@ export default function App() {
   }
 
   if (route === "/dashboard" && user) {
-    return <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />;
+    return <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} theme={theme} onToggleTheme={toggleTheme} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />;
   }
 
   if (route === "/login" || route === "/register") {
@@ -150,6 +177,8 @@ export default function App() {
       <AccountForm
         mode={route === "/login" ? "signin" : "signup"}
         notice={notice}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onBack={() => navigate("/")}
         onModeChange={openAccount}
         onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
@@ -157,5 +186,5 @@ export default function App() {
     );
   }
 
-  return <LandingPage notice={notice} onAccount={openAccount} />;
+  return <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />;
 }

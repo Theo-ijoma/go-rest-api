@@ -33,9 +33,12 @@ frontend/
 - An unauthenticated user sees the landing page and can open sign-in or registration.
 - `/login` and `/register` are distinct browser routes; `/dashboard` is the authenticated route and `/` is the landing page.
 - Navigation uses the History API, so direct links, refreshes, and browser back/forward work without a client-side router dependency.
+- Appearance can be switched between light and dark from each screen. The setting is saved as `daymark-theme` in browser storage, with the operating-system preference used on first visit.
 - Expired sessions return the user to the landing page. Task-loading failures remain visible in the dashboard and can be retried.
 
-UI is split between `src/components/LandingPage.tsx`, `AccountForm.tsx`, and `Dashboard.tsx`. `Reveal.tsx` applies the scroll-into-view animation used by the landing page. The styles are organized alongside the corresponding views in `src/`.
+UI is split between `src/components/LandingPage.tsx`, `AccountForm.tsx`, and `Dashboard.tsx`. `Reveal.tsx` applies the scroll-into-view animation used by the landing page. `ThemeToggle.tsx` is the shared appearance control. Dashboard-specific layout and component styles live in `dashboard.css`; app-wide dark palette overrides live in `theme.css`.
+
+The dashboard has a fixed, rounded translucent sidebar, summary cards, progress indicator, and task filters for all, open, and completed tasks. The sidebar remains pinned while the dashboard scrolls and exposes theme/sign-out controls on mobile. Light and dark themes are shared across the application and the selected mode persists in browser storage. Task changes continue to use the same authenticated API operations.
 
 ### Browser API client
 

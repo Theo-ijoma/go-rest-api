@@ -1,16 +1,19 @@
 import { FormEvent, useState } from "react";
-import type { AccountMode } from "../App";
+import type { AccountMode, Theme } from "../App";
 import { apiRequest, APIError, readTodos, readUser, Todo, User } from "../api";
+import ThemeToggle from "./ThemeToggle";
 
 type Props = {
   mode: AccountMode;
   notice: string;
+  theme: Theme;
+  onToggleTheme: () => void;
   onBack: () => void;
   onModeChange: (mode: AccountMode) => void;
   onAuthenticated: (user: User, todos: Todo[], loadError?: string) => void;
 };
 
-export default function AccountForm({ mode, notice, onBack, onModeChange, onAuthenticated }: Props) {
+export default function AccountForm({ mode, notice, theme, onToggleTheme, onBack, onModeChange, onAuthenticated }: Props) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,6 +69,7 @@ export default function AccountForm({ mode, notice, onBack, onModeChange, onAuth
       </section>
 
       <section className="account-content">
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
         <button className="back-link" type="button" onClick={onBack}><span aria-hidden="true">←</span> Back to Daymark</button>
         <div className="account-card">
           <div className="account-mobile-brand brand">

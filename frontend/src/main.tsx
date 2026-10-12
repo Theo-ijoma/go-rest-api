@@ -5,6 +5,7 @@ import "./styles.css";
 import "./landing.css";
 import "./account.css";
 import "./dashboard.css";
+import "./theme.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

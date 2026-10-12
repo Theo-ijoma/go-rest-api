@@ -1,9 +1,12 @@
 import { useState } from "react";
-import type { AccountMode } from "../App";
+import type { AccountMode, Theme } from "../App";
 import Reveal from "./Reveal";
+import ThemeToggle from "./ThemeToggle";
 
 type Props = {
   notice: string;
+  theme: Theme;
+  onToggleTheme: () => void;
   onAccount: (mode: AccountMode) => void;
 };
 
@@ -13,7 +16,7 @@ const steps = [
   { number: "03", title: "Keep your own pace", detail: "Come back to a private list that is yours, on every visit." },
 ];
 
-export default function LandingPage({ notice, onAccount }: Props) {
+export default function LandingPage({ notice, theme, onToggleTheme, onAccount }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function goToAccount(mode: AccountMode) {
@@ -40,6 +43,7 @@ export default function LandingPage({ notice, onAccount }: Props) {
         <nav className={`nav-links${menuOpen ? " nav-links-open" : ""}`} aria-label="Main navigation">
           <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} compact />
           <button className="nav-signin" type="button" onClick={() => goToAccount("signin")}>Sign in</button>
           <button className="button button-small" type="button" onClick={() => goToAccount("signup")}>Get started <span aria-hidden="true">↗</span></button>
         </nav>

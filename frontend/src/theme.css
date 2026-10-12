@@ -1,0 +1,252 @@
+:root[data-theme="dark"] .notice {
+  border-color: var(--line-strong);
+  color: var(--text-secondary);
+  background: var(--card-bg-soft);
+}
+
+:root[data-theme="dark"] .error-notice {
+  border-color: rgba(206, 119, 99, .35);
+  color: #e5aa9e;
+  background: rgba(125, 58, 47, .2);
+}
+
+:root[data-theme="dark"] .button-light {
+  color: #203c2c;
+  background: #d5e5c1;
+}
+
+:root[data-theme="dark"] .landing {
+  color: var(--text-primary);
+  background: #121914;
+}
+
+:root[data-theme="dark"] .landing-nav {
+  border-color: var(--line);
+  background: rgba(18, 25, 20, .94);
+}
+
+:root[data-theme="dark"] .landing-nav .brand,
+:root[data-theme="dark"] .landing-footer .brand {
+  color: var(--text-primary);
+}
+
+:root[data-theme="dark"] .nav-links > a,
+:root[data-theme="dark"] .nav-signin,
+:root[data-theme="dark"] .text-link,
+:root[data-theme="dark"] .footer-top {
+  color: var(--text-secondary);
+}
+
+:root[data-theme="dark"] .hero h1,
+:root[data-theme="dark"] .section-intro h2,
+:root[data-theme="dark"] .how-intro h2 {
+  color: #e8eee7;
+}
+
+:root[data-theme="dark"] .hero h1 span,
+:root[data-theme="dark"] .section-intro h2 span,
+:root[data-theme="dark"] .how-intro h2 span {
+  color: #9cbe9b;
+}
+
+:root[data-theme="dark"] .hero-description,
+:root[data-theme="dark"] .section-intro > p,
+:root[data-theme="dark"] .how-intro > p,
+:root[data-theme="dark"] .hero-proof,
+:root[data-theme="dark"] .landing-footer > p,
+:root[data-theme="dark"] .footer-bottom {
+  color: #9ba89e;
+}
+
+:root[data-theme="dark"] .hero-art::before {
+  background: #202d23;
+}
+
+:root[data-theme="dark"] .preview-card,
+:root[data-theme="dark"] .floating-note {
+  border-color: var(--line-strong);
+  background: #1c251f;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .24);
+}
+
+:root[data-theme="dark"] .preview-card h2,
+:root[data-theme="dark"] .floating-note strong {
+  color: #dce6dc;
+}
+
+:root[data-theme="dark"] .preview-subtitle,
+:root[data-theme="dark"] .preview-progress small,
+:root[data-theme="dark"] .preview-footer,
+:root[data-theme="dark"] .floating-note small {
+  color: #98a69a;
+}
+
+:root[data-theme="dark"] .preview-tasks li {
+  border-color: var(--line);
+  color: #c3cec4;
+}
+
+:root[data-theme="dark"] .preview-done > span:nth-child(2) {
+  color: #7e8c80;
+}
+
+:root[data-theme="dark"] .trust-strip {
+  border-color: var(--line);
+  color: #a0ada2;
+  background: #18211b;
+}
+
+:root[data-theme="dark"] .trust-strip > span:first-child {
+  color: #b0c4ad;
+}
+
+:root[data-theme="dark"] .about-card {
+  border-color: var(--line);
+  background: #1b241e;
+}
+
+:root[data-theme="dark"] .about-card h3,
+:root[data-theme="dark"] .step h3 {
+  color: #d6e0d6;
+}
+
+:root[data-theme="dark"] .about-card p,
+:root[data-theme="dark"] .step p {
+  color: #9aa79d;
+}
+
+:root[data-theme="dark"] .how-section {
+  background: #19221b;
+}
+
+:root[data-theme="dark"] .steps-list,
+:root[data-theme="dark"] .step {
+  border-color: var(--line-strong);
+}
+
+:root[data-theme="dark"] .landing-footer {
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .footer-bottom {
+  border-color: var(--line);
+}
+
+:root[data-theme="dark"] .account-page {
+  background: #131a15;
+}
+
+:root[data-theme="dark"] .account-content {
+  background: #131a15;
+}
+
+:root[data-theme="dark"] .back-link {
+  color: #a4b1a7;
+}
+
+:root[data-theme="dark"] .account-card h2 {
+  color: #e3ebe2;
+}
+
+:root[data-theme="dark"] .account-card > .eyebrow {
+  color: #9abb97;
+}
+
+:root[data-theme="dark"] .account-lead,
+:root[data-theme="dark"] .account-switch,
+:root[data-theme="dark"] .account-security {
+  color: #9aa79d;
+}
+
+:root[data-theme="dark"] .account-form label {
+  color: #c4d0c5;
+}
+
+:root[data-theme="dark"] .account-form input {
+  border-color: var(--line-strong);
+  color: var(--text-primary);
+  background: #1b241e;
+}
+
+:root[data-theme="dark"] .account-form input::placeholder {
+  color: #7f8d81;
+}
+
+:root[data-theme="dark"] .account-switch button {
+  color: #a7c9a6;
+}
+
+:root[data-theme="dark"] .day-mark {
+  border-color: var(--line);
+  color: #a5c29a;
+  background: var(--card-bg);
+}
+
+:root[data-theme="dark"] .stat-icon {
+  border-color: var(--line);
+  color: #aac3a1;
+  background: rgba(228, 239, 224, .07);
+}
+
+:root[data-theme="dark"] .stat-icon-done {
+  color: #c2ce91;
+}
+
+:root[data-theme="dark"] .filter-button.selected {
+  color: #b8d1b5;
+  background: #2a382d;
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .check-button {
+  background: #18211b;
+}
+
+:root[data-theme="dark"] .is-complete .check-button {
+  background: var(--green);
+}
+
+:root[data-theme="dark"] .retry-button {
+  border-color: var(--line-strong);
+  color: #bbd4b9;
+  background: var(--card-bg);
+}
+
+:root[data-theme="dark"] .retry-button:hover {
+  border-color: #89b393;
+}
+
+.account-content > .theme-toggle {
+  position: absolute;
+  top: 22px;
+  right: 27px;
+}
+
+@media (max-width: 760px) {
+  .account-content > .theme-toggle {
+    top: 14px;
+    right: 17px;
+  }
+}
+
+@media (max-width: 680px) {
+  :root[data-theme="dark"] .nav-menu-toggle {
+    border-color: var(--line-strong);
+    background: #1b241e;
+  }
+
+  :root[data-theme="dark"] .nav-menu-toggle span {
+    background: #d5e2d5;
+  }
+
+  :root[data-theme="dark"] .nav-links {
+    border-color: var(--line-strong);
+    background: #1b241e;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, .25);
+  }
+
+  :root[data-theme="dark"] .nav-links > a,
+  :root[data-theme="dark"] .nav-signin {
+    border-color: var(--line);
+  }
+}

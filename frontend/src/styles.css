@@ -15,11 +15,53 @@
   --line: #e9ece8;
   --surface: #fff;
   --pale-green: #edf4ef;
+  --app-bg: #f6f7f5;
+  --bar-bg: rgba(255, 255, 255, .82);
+  --card-bg: #fff;
+  --card-bg-soft: #f8faf7;
+  --input-bg: #fff;
+  --text-primary: #2b3d34;
+  --text-secondary: #4c5d52;
+  --text-muted: #89958d;
+  --text-placeholder: #a9b2ac;
+  --line-strong: #d6dfd7;
+  --focus-card-start: #f0f5eb;
+  --focus-card-end: #f8faf4;
+  --progress-track: #e8eee5;
+  --card-shadow: 0 9px 28px rgba(38, 61, 45, .045);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color: #e3e9e2;
+  background: #111713;
+  --ink: #e3e9e2;
+  --muted: #a0aca3;
+  --green: #89b393;
+  --green-dark: #6e9b7a;
+  --line: rgba(218, 231, 218, .1);
+  --surface: #1b231e;
+  --pale-green: #243128;
+  --app-bg: #111713;
+  --bar-bg: rgba(22, 29, 24, .88);
+  --card-bg: #1b231e;
+  --card-bg-soft: #202a23;
+  --input-bg: #171e19;
+  --text-primary: #edf2ec;
+  --text-secondary: #c2cdc3;
+  --text-muted: #94a197;
+  --text-placeholder: #77857a;
+  --line-strong: #3a493d;
+  --focus-card-start: #202d23;
+  --focus-card-end: #1b261f;
+  --progress-track: #303c32;
+  --card-shadow: 0 12px 36px rgba(0, 0, 0, .17);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 82px; }
-body { min-width: 320px; min-height: 100vh; margin: 0; }
+body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--text-primary); background: var(--app-bg); transition: color .2s, background .2s; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .62; }
