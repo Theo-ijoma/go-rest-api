@@ -56,8 +56,9 @@ export default {
       return jsonError(405, "Method not allowed");
     }
 
-    const upstreamURL = new URL("/api", origin);
-    upstreamURL.searchParams.set("path", apiPath);
+    const upstreamPath = apiPath === "/" ? "/" : apiPath;
+    const upstreamURL = new URL(upstreamPath, origin);
+    upstreamURL.search = url.search;
 
     const headers = new Headers();
     for (const name of ["accept", "content-type", "cookie", "origin"]) {

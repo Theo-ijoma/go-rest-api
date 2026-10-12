@@ -63,7 +63,7 @@ This repository has Vercel configuration for two separate projects. The frontend
 
 Set environment variables for **Production** and **Preview** deliberately. Preview frontend URLs have different origins; add the exact preview origin to the backend's allowed origin before testing authenticated preview deployments. Keep MongoDB credentials only in Vercel environment variables, never in Vite `VITE_*` variables. Configure Atlas network access for Vercel according to your Atlas plan, and avoid broad IP access where your plan offers private networking or stable egress.
 
-The backend has one Vercel Go function at `backend/api/index.go`; `backend/vercel.json` routes the normal API paths to that function. Its `go.mod` is at the backend project root, as required by the Vercel Go runtime. The frontend's `frontend/api/[...path].ts` proxy reads `BACKEND_URL` at runtime, so it does not need a rebuild when the backend deployment changes.
+The backend uses path-based Vercel Go functions under `backend/api/`; each endpoint directory has an `index.go` handler, and `backend/vercel.json` rewrites public API URLs to those functions, including `/healthz` to `/api/healthz`. Todo item requests rewrite to a fixed function and pass the ID as a query parameter. The handlers share a cached API instance. The `go.mod` file is at the backend project root, as required by the Vercel Go runtime. The frontend's `frontend/api/[...path].ts` proxy reads `BACKEND_URL` at runtime and forwards requests to those public backend URLs, so changing the backend URL does not require rebuilding the frontend.
 
 ## Endpoints
 
