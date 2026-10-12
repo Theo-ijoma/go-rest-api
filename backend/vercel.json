@@ -3,35 +3,35 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/api/index"
+      "destination": "/api?path=/"
     },
     {
       "source": "/healthz",
-      "destination": "/api/healthz"
+      "destination": "/api?path=/healthz"
     },
     {
       "source": "/auth/register",
-      "destination": "/api/auth/register"
+      "destination": "/api?path=/auth/register"
     },
     {
       "source": "/auth/login",
-      "destination": "/api/auth/login"
+      "destination": "/api?path=/auth/login"
     },
     {
       "source": "/auth/logout",
-      "destination": "/api/auth/logout"
+      "destination": "/api?path=/auth/logout"
     },
     {
       "source": "/auth/me",
-      "destination": "/api/auth/me"
+      "destination": "/api?path=/auth/me"
     },
     {
       "source": "/todos",
-      "destination": "/api/todos"
+      "destination": "/api?path=/todos"
     },
     {
       "source": "/todos/:id",
-      "destination": "/api/todos/id?todoId=:id"
+      "destination": "/api?path=/todos/:id"
     }
   ]
 }
