@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/todos/:id",
+      "destination": "/api/todos/id?todoId=:id"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

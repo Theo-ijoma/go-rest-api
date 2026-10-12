@@ -93,7 +93,7 @@ export async function apiRequest(path: string, init: RequestInit = {}): Promise<
 
   if (!response.ok) {
     if ((response.status === 404 || response.status === 405) && path.startsWith("/auth/")) {
-      throw new APIError("The backend is outdated and does not support accounts yet. Stop it, then restart it from the backend folder.", response.status);
+      throw new APIError("The deployed backend does not support this account route. Redeploy the backend and confirm POST /auth/login is available.", response.status);
     }
     let message = `Request failed (${response.status})`;
     try {
