@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"example.com/go-rest-api/internal/auth"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
@@ -20,10 +21,14 @@ type Handler struct {
 	store Repository
 }
 
+type Authenticator interface {
+	Require(http.Handler) http.Handler
+}
+
 // NewHandler builds the API routes and injects the repository they use.
 // The repository is passed in instead of created here, which keeps HTTP code
 // separate from MongoDB setup and makes the handlers easy to test.
-func NewHandler(store Repository) http.Handler {
+func NewHandler(store Repository, authenticator Authenticator) http.Handler {
 	handler := &Handler{store: store}
 	mux := http.NewServeMux()
 
@@ -31,11 +36,11 @@ func NewHandler(store Repository) http.Handler {
 	// path parameter that handlers can read with r.PathValue("id").
 	mux.HandleFunc("GET /", handler.home)
 	mux.HandleFunc("GET /healthz", handler.health)
-	mux.HandleFunc("GET /todos", handler.list)
-	mux.HandleFunc("POST /todos", handler.create)
-	mux.HandleFunc("GET /todos/{id}", handler.get)
-	mux.HandleFunc("PUT /todos/{id}", handler.update)
-	mux.HandleFunc("DELETE /todos/{id}", handler.delete)
+	mux.Handle("GET /todos", authenticator.Require(http.HandlerFunc(handler.list)))
+	mux.Handle("POST /todos", authenticator.Require(http.HandlerFunc(handler.create)))
+	mux.Handle("GET /todos/{id}", authenticator.Require(http.HandlerFunc(handler.get)))
+	mux.Handle("PUT /todos/{id}", authenticator.Require(http.HandlerFunc(handler.update)))
+	mux.Handle("DELETE /todos/{id}", authenticator.Require(http.HandlerFunc(handler.delete)))
 	return mux
 }
 
@@ -58,7 +63,7 @@ func (h *Handler) health(w http.ResponseWriter, _ *http.Request) {
 // list handles GET /todos. The request context is passed through so cancelled
 // HTTP requests can stop waiting on the database operation too.
 func (h *Handler) list(w http.ResponseWriter, r *http.Request) {
-	todos, err := h.store.List(r.Context())
+	todos, err := h.store.List(r.Context(), auth.CurrentUser(r).ID)
 	if err != nil {
 		writeInternalError(w, "list todos", err)
 		return
@@ -84,7 +89,7 @@ func (h *Handler) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	todo, err := h.store.Create(r.Context(), input.Title)
+	todo, err := h.store.Create(r.Context(), auth.CurrentUser(r).ID, input.Title)
 	if err != nil {
 		writeInternalError(w, "create todo", err)
 		return
@@ -102,7 +107,7 @@ func (h *Handler) get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	todo, err := h.store.Get(r.Context(), id)
+	todo, err := h.store.Get(r.Context(), auth.CurrentUser(r).ID, id)
 	if errors.Is(err, ErrNotFound) {
 		writeError(w, http.StatusNotFound, "todo not found")
 		return
@@ -137,7 +142,7 @@ func (h *Handler) update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	todo, err := h.store.Update(r.Context(), id, input.Title, input.Completed)
+	todo, err := h.store.Update(r.Context(), auth.CurrentUser(r).ID, id, input.Title, input.Completed)
 	if errors.Is(err, ErrNotFound) {
 		writeError(w, http.StatusNotFound, "todo not found")
 		return
@@ -157,7 +162,7 @@ func (h *Handler) delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.store.Delete(r.Context(), id)
+	err := h.store.Delete(r.Context(), auth.CurrentUser(r).ID, id)
 	if errors.Is(err, ErrNotFound) {
 		writeError(w, http.StatusNotFound, "todo not found")
 		return

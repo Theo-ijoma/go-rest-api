@@ -5,13 +5,17 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 
+	"example.com/go-rest-api/internal/auth"
 	"example.com/go-rest-api/internal/todos"
 )
 
@@ -26,6 +30,23 @@ func run() error {
 	// Go does not load .env files automatically. Existing environment variables
 	// still work, and godotenv does not overwrite values already set by the OS.
 	if err := godotenv.Load(); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	var cookieSecure bool
+	if configuredSecure := os.Getenv("SESSION_COOKIE_SECURE"); configuredSecure != "" {
+		secure, err := strconv.ParseBool(configuredSecure)
+		if err != nil {
+			return errors.New("SESSION_COOKIE_SECURE must be true or false")
+		}
+		cookieSecure = secure
+	}
+	allowedOrigin, err := frontendOrigin(os.Getenv("FRONTEND_ORIGIN"))
+	if err != nil {
 		return err
 	}
 
@@ -57,17 +78,31 @@ func run() error {
 		databaseName = "go_rest_api"
 	}
 	store := todos.NewStore(client.Database(databaseName).Collection("todos"))
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	sessionDuration := 7 * 24 * time.Hour
+	authService := auth.NewService(
+		client.Database(databaseName).Collection("users"),
+		client.Database(databaseName).Collection("sessions"),
+		sessionDuration,
+	)
+	indexContext, cancelIndexes := context.WithTimeout(context.Background(), 10*time.Second)
+	if err := authService.EnsureIndexes(indexContext); err != nil {
+		cancelIndexes()
+		return err
 	}
+	if err := store.EnsureIndexes(indexContext); err != nil {
+		cancelIndexes()
+		return err
+	}
+	cancelIndexes()
 
-	// The Handler receives the MongoDB repository; it does not need to know
-	// about connection setup or which database driver is being used.
+	mux := http.NewServeMux()
+	authHandler := auth.NewHandler(authService, cookieSecure, sessionDuration)
+	authHandler.RegisterRoutes(mux)
+	mux.Handle("/", todos.NewHandler(store, authHandler))
+
 	server := &http.Server{
 		Addr:              ":" + port,
-		Handler:           todos.NewHandler(store),
+		Handler:           auth.CORS(allowedOrigin, mux),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
@@ -76,4 +111,19 @@ func run() error {
 		return err
 	}
 	return nil
+}
+
+func frontendOrigin(value string) (string, error) {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return "http://localhost:5173", nil
+	}
+	origin, err := url.Parse(value)
+	if err != nil || !origin.IsAbs() || origin.Host == "" ||
+		origin.User != nil ||
+		(origin.Scheme != "http" && origin.Scheme != "https") ||
+		(origin.Path != "" && origin.Path != "/") || origin.RawQuery != "" || origin.Fragment != "" {
+		return "", errors.New("FRONTEND_ORIGIN must be an HTTP or HTTPS origin without a path")
+	}
+	return origin.Scheme + "://" + origin.Host, nil
 }

@@ -1,0 +1,81 @@
+.app-shell { min-height: 100vh; background: #f6f7f5; }
+.topbar { display: flex; height: 70px; align-items: center; justify-content: space-between; padding: 0 max(calc((100vw - 1040px) / 2), 6%); border-bottom: 1px solid #e9ece8; background: rgba(255, 255, 255, .82); }
+.topbar .brand { color: var(--ink); font-size: 17px; }
+.topbar .brand-mark { width: 29px; height: 29px; font-size: 18px; }
+.topbar-right { display: flex; align-items: center; gap: 25px; }
+.account-greeting { color: #819087; font-size: 11px; }
+.text-button { padding: 8px 0; border: 0; color: #68776f; background: transparent; font-size: 11px; }
+.text-button:hover { color: var(--green); }
+.dashboard { width: min(100% - 48px, 900px); margin: 0 auto; padding: 59px 0 35px; }
+.welcome-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 27px; }
+.welcome-row h1 { margin: 11px 0 6px; font-size: clamp(24px, 3vw, 31px); font-weight: 700; letter-spacing: -1.2px; }
+.muted { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.welcome-row .muted { margin: 0; }
+.date-stamp { padding-bottom: 4px; color: #89948d; font-size: 11px; }
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr 1.35fr; gap: 13px; margin-bottom: 25px; }
+.summary-card { display: flex; min-height: 91px; align-items: center; gap: 13px; padding: 17px; border: 1px solid #e9ece8; border-radius: 8px; background: var(--surface); }
+.summary-icon { display: grid; width: 35px; height: 35px; flex: 0 0 auto; place-items: center; border-radius: 8px; font-size: 17px; }
+.total-icon { color: #658374; background: #edf4ef; }
+.done-icon { color: #82965f; background: #f1f4e8; }
+.summary-card > div { display: flex; flex-direction: column; gap: 3px; }
+.summary-label { color: #8a958e; font-size: 10px; }
+.summary-card strong { color: #34443c; font-size: 18px; font-weight: 700; }
+.focus-card { gap: 12px; background: #f1f5ed; }
+.focus-spark { color: #789162; font-size: 21px; }
+.focus-card .summary-label { color: #829078; }
+.focus-card strong { font-size: 12px; font-weight: 600; }
+.tasks-panel { overflow: hidden; border: 1px solid #e7eae6; border-radius: 9px; background: white; }
+.tasks-heading { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px 18px; }
+.tasks-heading h2 { display: flex; align-items: center; gap: 9px; margin: 0 0 4px; font-size: 15px; font-weight: 700; letter-spacing: -.3px; }
+.task-count { display: grid; min-width: 19px; height: 19px; place-items: center; border-radius: 6px; color: #6d8175; background: #edf2ed; font-size: 10px; font-weight: 600; }
+.tasks-heading .muted { margin: 0; font-size: 11px; }
+.completion-label { color: #849189; font-size: 10px; }
+.add-form { display: flex; height: 48px; align-items: center; gap: 10px; margin: 0 24px 10px; padding: 0 6px 0 13px; border: 1px solid #e7ebe6; border-radius: 6px; transition: border-color .18s, box-shadow .18s; }
+.add-form:focus-within { border-color: #6b9879; box-shadow: 0 0 0 3px rgba(63, 116, 83, .1); }
+.add-icon { color: #72917d; font-size: 19px; font-weight: 400; }
+.add-form input { width: 100%; height: 100%; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 11px; }
+.add-form input::placeholder { color: #a9b0ac; }
+.add-button { min-height: 34px; flex: 0 0 auto; gap: 11px; padding: 0 11px; font-size: 10px; }
+.todo-list { margin: 8px 24px 0; padding: 0; list-style: none; }
+.todo-row { display: flex; min-height: 54px; align-items: center; gap: 13px; border-bottom: 1px solid #f0f2ef; }
+.check-button { display: grid; width: 17px; height: 17px; flex: 0 0 auto; place-items: center; padding: 0; border: 1px solid #cad4cc; border-radius: 50%; color: white; background: white; font-size: 10px; }
+.check-button:hover { border-color: var(--green); }
+.is-complete .check-button { border-color: var(--green); background: var(--green); }
+.todo-title { flex: 1; color: #46564d; font-size: 12px; }
+.is-complete .todo-title { color: #a1aaa4; text-decoration: line-through; }
+.delete-button { display: grid; width: 28px; height: 28px; place-items: center; padding: 0; border: 0; border-radius: 5px; color: #a4ada7; background: transparent; font-size: 19px; }
+.delete-button:hover { color: #a65144; background: #fff4f1; }
+.empty-state { display: flex; min-height: 184px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #9ba59e; font-size: 11px; }
+.empty-state strong { margin-top: 4px; color: #58685f; font-size: 13px; }
+.empty-illustration { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; color: #739169; background: #eff3e9; font-size: 17px; }
+.list-error .empty-illustration { color: #934838; background: #fff0ec; }
+.retry-button { margin-top: 5px; padding: 7px 12px; border: 1px solid #dce5dc; border-radius: 5px; color: #426a4e; background: white; font-size: 10px; }
+.retry-button:hover { border-color: #a9c0a9; background: #f7faf5; }
+.tasks-footer { display: flex; min-height: 39px; align-items: center; justify-content: center; gap: 7px; border-top: 1px solid #f0f2ef; color: #9aa49e; font-size: 10px; }
+.footer-spark { color: #8da276; font-size: 12px; }
+.page-footer { padding: 21px 0 0; color: #a1aaa4; text-align: center; font-size: 10px; }
+.page-footer span { padding: 0 4px; color: #6c8a74; }
+
+@media (max-width: 760px) {
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .focus-card { grid-column: 1 / -1; min-height: 68px; }
+  .dashboard { padding-top: 42px; }
+}
+
+@media (max-width: 520px) {
+  .topbar { height: 62px; padding: 0 19px; }
+  .account-greeting { display: none; }
+  .topbar-right { gap: 0; }
+  .dashboard { width: calc(100% - 32px); padding-top: 34px; }
+  .welcome-row { align-items: flex-start; flex-direction: column; gap: 13px; }
+  .welcome-row h1 { max-width: 340px; font-size: 26px; }
+  .summary-card { min-height: 78px; gap: 9px; padding: 12px; }
+  .summary-icon { width: 31px; height: 31px; }
+  .summary-card strong { font-size: 16px; }
+  .focus-card strong { font-size: 11px; }
+  .tasks-heading { padding: 19px 16px 16px; }
+  .add-form { margin-right: 15px; margin-left: 15px; }
+  .add-button { gap: 5px; padding: 0 8px; }
+  .todo-list { margin-right: 16px; margin-left: 16px; }
+  .completion-label { font-size: 9px; }
+}
