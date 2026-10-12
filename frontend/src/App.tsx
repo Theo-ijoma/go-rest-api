@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { apiRequest, APIError, readTodos, readUser, Todo, User } from "./api";
 import AccountForm from "./components/AccountForm";
 import Dashboard from "./components/Dashboard";
@@ -161,30 +162,46 @@ export default function App() {
 
   if (checkingSession) {
     return (
-      <main className="session-loading">
-        <span className="brand-mark" aria-hidden="true">d</span>
-        <p>Getting your space ready...</p>
-      </main>
+      <>
+        <main className="session-loading">
+          <span className="brand-mark" aria-hidden="true">d</span>
+          <p>Getting your space ready...</p>
+        </main>
+        <SpeedInsights />
+      </>
     );
   }
 
   if (route === "/dashboard" && user) {
-    return <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} theme={theme} onToggleTheme={toggleTheme} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />;
+    return (
+      <>
+        <Dashboard user={user} todos={todos} setTodos={setTodos} todosError={todosError} theme={theme} onToggleTheme={toggleTheme} onRetry={() => void reloadTodos()} onSignOut={() => void signOut()} />
+        <SpeedInsights />
+      </>
+    );
   }
 
   if (route === "/login" || route === "/register") {
     return (
-      <AccountForm
-        mode={route === "/login" ? "signin" : "signup"}
-        notice={notice}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-        onBack={() => navigate("/")}
-        onModeChange={openAccount}
-        onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
-      />
+      <>
+        <AccountForm
+          mode={route === "/login" ? "signin" : "signup"}
+          notice={notice}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onBack={() => navigate("/")}
+          onModeChange={openAccount}
+          onAuthenticated={(authenticatedUser, userTodos, loadError) => onAuthenticated(authenticatedUser, userTodos, loadError)}
+        />
+        <SpeedInsights />
+      </>
     );
   }
 
-  return <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />;
+  return (
+    <>
+      <LandingPage notice={notice} theme={theme} onToggleTheme={toggleTheme} onAccount={openAccount} />
+      <SpeedInsights />
+    </>
+  );
 }
