@@ -25,7 +25,45 @@ A personal task list with a Go API, MongoDB storage, and a React landing page. E
 
 The app stores accounts in MongoDB's `users` collection, hashes passwords with bcrypt, and stores revocable, expiring sessions in `sessions`. Sessions use HttpOnly cookies. Each todo stores its owner's user ID, so users cannot list or modify one another's tasks. Existing todos without an owner remain in MongoDB and are not shown to new accounts.
 
-The frontend's Vite development proxy forwards `/api` requests to `http://localhost:8080`. Set `FRONTEND_ORIGIN` in `backend/.env` if the frontend is served from a different origin. The API accepts browser mutations only from this configured origin. For production, serve the frontend and API on the same site over HTTPS, configure the exact frontend origin, and set `SESSION_COOKIE_SECURE=true`. Set `VITE_API_BASE_URL` in `frontend/.env.local` if the API is hosted elsewhere.
+The frontend's Vite development proxy forwards `/api` requests to `http://localhost:8080`. Set `FRONTEND_ORIGIN` in `backend/.env` if the frontend is served from a different origin. The API accepts browser mutations only from this configured origin. In production, the frontend's Vercel proxy keeps browser requests same-origin while the API can remain a separate HTTPS deployment. Set `SESSION_COOKIE_SECURE=true` for production.
+
+## Deploy frontend and API as separate Vercel projects
+
+This repository has Vercel configuration for two separate projects. The frontend includes a small same-origin `/api` proxy. It forwards requests to the independently deployed Go API and passes the HttpOnly session cookie through the frontend domain. This avoids relying on third-party cookies between separate `vercel.app` domains.
+
+### 1. Deploy the backend
+
+1. Import this Git repository as a new Vercel project named, for example, `daymark-api`.
+2. Set **Root Directory** to `backend`. Leave the Go project build settings at their defaults.
+3. Add these Production environment variables in **Settings → Environment Variables**:
+
+   | Name | Value |
+   | --- | --- |
+   | `MONGODB_URI` | MongoDB Atlas connection string |
+   | `MONGODB_DATABASE` | `go_rest_api` or your database name |
+   | `FRONTEND_ORIGIN` | The exact frontend production origin, such as `https://daymark-web.vercel.app` |
+   | `SESSION_COOKIE_SECURE` | `true` |
+
+4. Deploy the project. Check `https://<backend-project>.vercel.app/healthz`; it should return `{"status":"ok"}`.
+
+### 2. Deploy the frontend
+
+1. Import the same Git repository as a second Vercel project named, for example, `daymark-web`.
+2. Set **Root Directory** to `frontend`. Vercel builds the Vite app to `dist` and deploys the `/api` proxy function.
+3. Add this Production environment variable:
+
+   | Name | Value |
+   | --- | --- |
+   | `BACKEND_URL` | Backend origin only, such as `https://daymark-api.vercel.app` |
+
+   Do not set `VITE_API_BASE_URL` to the backend deployment. The browser must call the frontend's `/api` proxy so its session cookie remains first-party.
+
+4. Deploy the frontend, then copy its exact production origin into the backend's `FRONTEND_ORIGIN` variable and redeploy the backend if it changed.
+5. Open the frontend deployment and test account registration, sign-in, todo changes, refresh, and sign-out.
+
+Set environment variables for **Production** and **Preview** deliberately. Preview frontend URLs have different origins; add the exact preview origin to the backend's allowed origin before testing authenticated preview deployments. Keep MongoDB credentials only in Vercel environment variables, never in Vite `VITE_*` variables. Configure Atlas network access for Vercel according to your Atlas plan, and avoid broad IP access where your plan offers private networking or stable egress.
+
+The backend has one Vercel Go function at `backend/api/index.go`; `backend/vercel.json` routes the normal API paths to that function. Its `go.mod` is at the backend project root, as required by the Vercel Go runtime. The frontend's `frontend/api/[...path].ts` proxy reads `BACKEND_URL` at runtime, so it does not need a rebuild when the backend deployment changes.
 
 ## Endpoints
 
